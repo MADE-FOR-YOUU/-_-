@@ -66,61 +66,55 @@
     pointer-events: none;
     z-index: 0;
     display: flex;
-    justify-content: space-around;
-    gap: 16px;
-    padding: 0 8px;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 10px;
+    opacity: 0.8;
   }
   .waterfall-col {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex: 1;
-    min-width: 130px;
-    max-width: 200px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 210px;
     animation: waterfallFlow linear infinite;
     will-change: transform;
   }
-  .waterfall-col:nth-child(1) { animation-duration: 46s; }
-  .waterfall-col:nth-child(2) { animation-duration: 58s; animation-delay: -16s; }
-  .waterfall-col:nth-child(3) { animation-duration: 50s; animation-delay: -30s; }
-  .waterfall-col:nth-child(4) { animation-duration: 54s; animation-delay: -8s; }
-  .waterfall-col:nth-child(5) { animation-duration: 62s; animation-delay: -22s; }
-  .waterfall-col:nth-child(6) { animation-duration: 48s; animation-delay: -38s; }
-
+  /* الحلقة تتكرر بدقة لأن كل صورة ليها margin تحتها (مش gap) */
   @keyframes waterfallFlow {
-    0% { transform: translateY(-50%); }
-    100% { transform: translateY(0%); }
+    from { transform: translate3d(0, -50%, 0); }
+    to   { transform: translate3d(0, 0, 0); }
   }
-
   .waterfall-thumb {
     width: 100%;
-    aspect-ratio: 3/4;
-    border-radius: 16px;
+    margin-bottom: 14px;
+    border-radius: 14px;
     overflow: hidden;
-    background: rgba(30, 12, 22, 0.4);
-    border: 1px solid rgba(245, 213, 166, 0.12);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-    opacity: 0.16;
-    filter: blur(1px) saturate(0.85);
+    background: rgba(30, 12, 22, 0.5);
+    border: 1px solid rgba(245, 213, 166, 0.16);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
   }
+  .waterfall-thumb.r34 { aspect-ratio: 3 / 4; }
+  .waterfall-thumb.r45 { aspect-ratio: 4 / 5; }
+  .waterfall-thumb.r11 { aspect-ratio: 1 / 1; }
   .waterfall-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
+  @media (prefers-reduced-motion: reduce) {
+    .waterfall-col { animation: none; transform: none; }
+  }
 
-  /* تراكب مخملي دافئ يحمي وضوح ونقاء النصوص والبطاقات */
+  /* تراكب مخملي: غامق ورا العنوان عشان الكلام يتقري، وخفيف في الباقي عشان شلال الصور يبان */
   .velvet-depth-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 1;
     background:
-      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(56, 21, 39, 0.78) 0%, rgba(17, 7, 12, 0.88) 75%),
-      radial-gradient(circle 750px at 15% 25%, rgba(42, 16, 31, 0.75) 0%, transparent 70%),
-      radial-gradient(circle 800px at 85% 65%, rgba(48, 18, 35, 0.75) 0%, transparent 75%),
-      linear-gradient(180deg, rgba(17, 7, 12, 0.65) 0%, rgba(17, 7, 12, 0.92) 50%, rgba(17, 7, 12, 0.96) 100%);
+      radial-gradient(ellipse 90% 40% at 50% 14%, rgba(17, 7, 12, 0.86) 0%, rgba(17, 7, 12, 0.55) 60%, transparent 100%),
+      linear-gradient(180deg, rgba(17, 7, 12, 0.50) 0%, rgba(17, 7, 12, 0.36) 45%, rgba(17, 7, 12, 0.64) 100%),
+      radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(17, 7, 12, 0.55) 100%);
   }
 
   .gift-canvas {
@@ -1730,38 +1724,61 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">"
 const resolvePath = (path, folder) => path.includes("/") ? path : `${folder}/${path}`;
 
 /* ============================================================
-   🌊 بناء شلال الصور المتساقطة بالخلفية تلقائياً
+   🌊 شلال الصور في الخلفية
+   بيستخدم نسخ مصغّرة خفيفة من صور الصحاب (فولدر thumbs).
+   لو عايز تغيّر الصور اللي في الشلال: عدّل القايمة دي بأسماء ملفات
+   موجودة في images/، وحط نسخة مصغرة بنفس الاسم في thumbs/ (لو مفيش نسخة مصغرة بيستخدم الصورة الأصلية).
    ============================================================ */
-function setupWaterfallBackground() {
-  const container = document.getElementById("waterfallBg");
-  if (!container) return;
-  const friends = SECTIONS[3].body.friends;
-  const allImages = [];
-  friends.forEach(f => {
-    (f.photos || []).forEach(p => {
-      if (p) allImages.push(resolvePath(p, "images"));
-    });
-  });
-  if (!allImages.length) return;
+const WATERFALL_PHOTOS = [
+  "ahmed1.jpg", "ahmed3.jpg", "ahmed7.jpg", "eyad1.jpg",
+  "eyad3.jpg", "eyad6.jpg", "mohamed1.jpg", "mohamed5.jpg",
+  "mohamed10.jpg", "ali1.jpg", "ali5.jpg", "ali8.jpg",
+  "zeina1.jpg", "zeina3.jpg", "zeina6.jpg", "rovan1.jpg",
+  "rovan5.jpg", "rovan10.jpg", "soaad1.jpg", "soaad5.jpg",
+  "soaad10.jpg", "youssef1.jpg", "youssef5.jpg", "youssef9.jpg",
+  "gamila1.jpg", "gamila5.jpg", "gamila10.jpg", "logy1.jpg",
+  "logy4.jpg", "logy7.jpg", "jana1.jpg", "jana6.jpg",
+  "jana9.jpg", "hana1.jpg", "hana5.jpg", "hana9.jpg",
+  "eman1.jpg", "eman5.jpg", "eman10.jpg",
+];
 
-  const numCols = window.innerWidth < 640 ? 3 : (window.innerWidth < 1024 ? 4 : 6);
+function wfFallback(img) {
+  if (!img.dataset.tried) { img.dataset.tried = "1"; img.src = "images/" + img.dataset.name; }
+  else if (img.parentElement) img.parentElement.remove();
+}
+
+let wfLastCols = 0;
+function setupWaterfallBackground() {
+  const box = document.getElementById("waterfallBg");
+  if (!box || !WATERFALL_PHOTOS.length) return;
+  const w = window.innerWidth, vh = window.innerHeight;
+  const cols = w < 640 ? 3 : (w < 1024 ? 4 : 6);
+  if (cols === wfLastCols) return;
+  wfLastCols = cols;
+
+  const ratios = ["r34", "r45", "r11", "r34", "r45"];
+  const colW = Math.min(210, (w - 20 - 14 * (cols - 1)) / cols);
   let html = "";
-  for (let c = 0; c < numCols; c++) {
-    const colImages = [];
-    for (let i = 0; i < 10; i++) {
-      const img = allImages[(c * 7 + i) % allImages.length];
-      colImages.push(img);
-    }
-    const doubled = colImages.concat(colImages);
-    html += `<div class="waterfall-col">` + doubled.map(src => `
-      <div class="waterfall-thumb">
-        <img src="${esc(src)}" alt="" loading="lazy" onerror="this.parentElement.remove()">
-      </div>
-    `).join("") + `</div>`;
+  for (let c = 0; c < cols; c++) {
+    const mine = WATERFALL_PHOTOS.filter((_, i) => i % cols === c);
+    if (!mine.length) continue;
+    // نكرر القايمة لحد ما تغطي الشاشة مرة ونص على الأقل، وبعدين نضاعفها عشان الحلقة تبقى متصلة
+    const approxH = colW * 1.15 + 14;
+    const reps = Math.max(1, Math.ceil((vh * 1.6) / (approxH * mine.length)));
+    let seq = [];
+    for (let r = 0; r < reps; r++) seq = seq.concat(mine);
+    const items = seq.map((name, i) => ({ name, r: ratios[(i + c) % ratios.length] }));
+    const loop = items.concat(items);
+    const dur = 70 + (c % 3) * 14 + c * 3;
+    const delay = -((c * 23) % dur);
+    html += `<div class="waterfall-col" style="animation-duration:${dur}s;animation-delay:${delay}s">` +
+      loop.map(it => `<div class="waterfall-thumb ${it.r}"><img src="thumbs/${esc(it.name)}" data-name="${esc(it.name)}" alt="" decoding="async" onerror="wfFallback(this)"></div>`).join("") +
+      `</div>`;
   }
-  container.innerHTML = html;
+  box.innerHTML = html;
 }
 window.addEventListener("DOMContentLoaded", setupWaterfallBackground);
+window.addEventListener("resize", () => { clearTimeout(window.__wfT); window.__wfT = setTimeout(setupWaterfallBackground, 250); });
 
 /* ============================================================
    👥 إظهار صور الأصدقاء الحقيقية من الخارج في الكارت الرئيسي
