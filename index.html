@@ -808,8 +808,21 @@ function friendSlides(f) {
 function buildDots() {
   const car = document.getElementById("car"), d = document.getElementById("dots");
   if (!car || !d) return;
-  const n = Math.round(Math.abs(car.scrollLeft) / car.clientWidth);
+  const n = slideIndex(car);
   d.innerHTML = [...car.children].map((_, j) => `<i class="${j === n ? "on" : ""}"></i>`).join("");
+}
+let carIO = null;
+function slideIndex(car) {
+  const kids = [...car.children];
+  if (!kids.length) return 0;
+  const cr = car.getBoundingClientRect();
+  const cc = cr.left + cr.width / 2;
+  let best = 0, bestD = Infinity;
+  kids.forEach((sl, j) => {
+    const d = Math.abs(sl.getBoundingClientRect().left + sl.getBoundingClientRect().width / 2 - cc);
+    if (d < bestD) { bestD = d; best = j; }
+  });
+  return best;
 }
 function dropSlide(el) {
   const sl = el.closest(".slide");
@@ -833,19 +846,17 @@ function showFriend(k) {
      <div class="dots" id="dots"></div>`;
   const car = document.getElementById("car");
   buildDots();
-  let lastN = -1;
-  const syncCarousel = () => {
-    const n = Math.round(Math.abs(car.scrollLeft) / car.clientWidth);
+  const syncDots = () => {
+    const n = slideIndex(car);
     [...document.querySelectorAll("#dots i")].forEach((d, j) => d.classList.toggle("on", j === n));
-    if (n === lastN) return;
-    lastN = n;
-    [...car.children].forEach((sl, j) => {
-      if (j === n) return;
-      sl.querySelectorAll("video").forEach(v => { if (!v.paused) v.pause(); });
-    });
   };
-  car.addEventListener("scroll", syncCarousel, { passive: true });
-  syncCarousel();
+  car.addEventListener("scroll", syncDots, { passive: true });
+  syncDots();
+  if (carIO) { carIO.disconnect(); carIO = null; }
+  carIO = new IntersectionObserver(ents => {
+    ents.forEach(en => { if (!en.isIntersecting) en.target.pause(); });
+  }, { root: car, threshold: 0.6 });
+  car.querySelectorAll("video").forEach(v => carIO.observe(v));
   document.getElementById("page").scrollTop = 0;
 }
 
