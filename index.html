@@ -958,7 +958,7 @@
     gap: 18px;
   }
   @media (max-width: 580px) {
-    .friends-collection-grid { grid-template-columns: 1fr; }
+    .friends-collection-grid { gap: 10px; }
   }
   .friend-stamp-card {
     background: #230e1a;
@@ -1769,7 +1769,7 @@ function setupWaterfallBackground() {
     for (let r = 0; r < reps; r++) seq = seq.concat(mine);
     const items = seq.map((name, i) => ({ name, r: ratios[(i + c) % ratios.length] }));
     const loop = items.concat(items);
-    const dur = 70 + (c % 3) * 14 + c * 3;
+    const dur = 30 + (c % 3) * 7 + c * 2;
     const delay = -((c * 23) % dur);
     html += `<div class="waterfall-col" style="animation-duration:${dur}s;animation-delay:${delay}s">` +
       loop.map(it => `<div class="waterfall-thumb ${it.r}"><img src="thumbs/${esc(it.name)}" data-name="${esc(it.name)}" alt="" decoding="async" onerror="wfFallback(this)"></div>`).join("") +
