@@ -1963,6 +1963,20 @@ function handleMediaError(el) {
   updateDots();
 }
 
+function carouselActiveIndex(track) {
+  const slides = track.children;
+  if (!slides.length) return 0;
+  const r = track.getBoundingClientRect();
+  const center = r.left + r.width / 2;
+  let best = 0, bestDist = Infinity;
+  Array.from(slides).forEach((sl, i) => {
+    const sr = sl.getBoundingClientRect();
+    const d = Math.abs(sr.left + sr.width / 2 - center);
+    if (d < bestDist) { bestDist = d; best = i; }
+  });
+  return best;
+}
+
 function setupCarousel() {
   const track = document.getElementById("friendCarousel");
   const dotsContainer = document.getElementById("carouselDots");
@@ -1970,9 +1984,7 @@ function setupCarousel() {
   const count = track.children.length;
   dotsContainer.innerHTML = Array.from({ length: count }, (_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join("");
   track.addEventListener("scroll", () => {
-    const width = track.offsetWidth;
-    if (!width) return;
-    const activeIndex = Math.round(track.scrollLeft / width);
+    const activeIndex = carouselActiveIndex(track);
     Array.from(dotsContainer.children).forEach((dot, idx) => {
       dot.classList.toggle("active", idx === activeIndex);
     });
@@ -1984,7 +1996,8 @@ function updateDots() {
   const dotsContainer = document.getElementById("carouselDots");
   if (!track || !dotsContainer) return;
   const count = track.children.length;
-  dotsContainer.innerHTML = Array.from({ length: count }, (_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join("");
+  const active = carouselActiveIndex(track);
+  dotsContainer.innerHTML = Array.from({ length: count }, (_, i) => `<span class="${i === active ? 'active' : ''}"></span>`).join("");
 }
 
 document.addEventListener("keydown", e => {
