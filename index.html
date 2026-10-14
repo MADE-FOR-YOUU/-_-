@@ -503,6 +503,11 @@ const SECTIONS = [
           "rovan3.mp4",           // فيديو 3
           "rovan4.mp4",           // فيديو 4
           "rovan5.mp4",           // فيديو 5
+          "rovan6.mp4",           // فيديو 6
+          "rovan7.mp4",           // فيديو 7
+          "rovan8.mp4",           // فيديو 8
+          "rovan9.mp4",           // فيديو 9
+          "rovan10.mp4",          // فيديو 10
         ],
       },
 
@@ -601,6 +606,7 @@ const SECTIONS = [
           "logy8.jpg",            // صورة 8
           "logy9.jpg",            // صورة 9
           "logy10.jpg",           // صورة 10
+          "logy11.jpg",           // صورة 11
         ],
         videos: [
           "logy1.mp4",            // فيديو 1
@@ -679,6 +685,7 @@ const SECTIONS = [
           "eman8.jpg",            // صورة 8
           "eman9.jpg",            // صورة 9
           "eman10.jpg",           // صورة 10
+          "eman11.jpg",           // صورة 11
         ],
         videos: [
           "eman1.mp4",            // فيديو 1
@@ -801,8 +808,21 @@ function friendSlides(f) {
 function buildDots() {
   const car = document.getElementById("car"), d = document.getElementById("dots");
   if (!car || !d) return;
-  const n = Math.round(Math.abs(car.scrollLeft) / car.clientWidth);
+  const n = slideIndex(car);
   d.innerHTML = [...car.children].map((_, j) => `<i class="${j === n ? "on" : ""}"></i>`).join("");
+}
+let carIO = null;
+function slideIndex(car) {
+  const kids = [...car.children];
+  if (!kids.length) return 0;
+  const cr = car.getBoundingClientRect();
+  const cc = cr.left + cr.width / 2;
+  let best = 0, bestD = Infinity;
+  kids.forEach((sl, j) => {
+    const d = Math.abs(sl.getBoundingClientRect().left + sl.getBoundingClientRect().width / 2 - cc);
+    if (d < bestD) { bestD = d; best = j; }
+  });
+  return best;
 }
 function dropSlide(el) {
   const sl = el.closest(".slide");
@@ -826,10 +846,17 @@ function showFriend(k) {
      <div class="dots" id="dots"></div>`;
   const car = document.getElementById("car");
   buildDots();
-  car.addEventListener("scroll", () => {
-    const n = Math.round(Math.abs(car.scrollLeft) / car.clientWidth);
+  const syncDots = () => {
+    const n = slideIndex(car);
     [...document.querySelectorAll("#dots i")].forEach((d, j) => d.classList.toggle("on", j === n));
-  }, { passive: true });
+  };
+  car.addEventListener("scroll", syncDots, { passive: true });
+  syncDots();
+  if (carIO) { carIO.disconnect(); carIO = null; }
+  carIO = new IntersectionObserver(ents => {
+    ents.forEach(en => { if (!en.isIntersecting) en.target.pause(); });
+  }, { root: car, threshold: 0.6 });
+  car.querySelectorAll("video").forEach(v => carIO.observe(v));
   document.getElementById("page").scrollTop = 0;
 }
 
