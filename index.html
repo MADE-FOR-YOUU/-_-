@@ -1155,7 +1155,17 @@
       linear-gradient(160deg, #fbeede 0%, #f7e3d6 100%);
     background-attachment: fixed;
   }
-  .velvet-depth-overlay { opacity: 0.35; }
+  .velvet-depth-overlay { opacity: 0.5; }
+
+  /* الهيدر = ورقة كبيرة مثبّتة فوق الصور عشان الكلام يفضل مقروء */
+  .bespoke-header {
+    background: var(--paper);
+    border: 1.5px solid var(--ink-line);
+    border-radius: 6px 22px 6px 22px;
+    box-shadow: var(--shadow-cut);
+    padding: 30px 26px 26px;
+    transform: rotate(-0.4deg);
+  }
 
   /* الشريط المتحرّك — يعطي إحساس المجلة المطبوعة */
   .marquee-strip {
@@ -1166,7 +1176,7 @@
   .marquee-strip .marquee-track { display: inline-block; padding-inline-end: 40px; animation: marqueeSlide 26s linear infinite; }
   .marquee-strip span { font-family: var(--font-display); font-weight: 700; color: var(--ink-line); font-size: 15px; }
   .marquee-strip .mq-dot { color: #d16e90; margin: 0 14px; }
-  @keyframes marqueeSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marqueeSlide { from { transform: translateX(0); } to { transform: translateX(50%); } }
   @media (prefers-reduced-motion: reduce) { .marquee-strip .marquee-track { animation: none; } }
 
   /* البطاقات = ورق مقصوص ملصوق بميل بسيط + شريط لاصق */
