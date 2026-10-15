@@ -1171,12 +1171,12 @@
   .marquee-strip {
     overflow: hidden; white-space: nowrap; border-block: 2px dashed var(--ink-line);
     padding: 8px 0; margin: 4px 0 26px; transform: rotate(-0.6deg);
-    background: var(--paper);
+    background: var(--paper); direction: ltr;
   }
-  .marquee-strip .marquee-track { display: inline-block; padding-inline-end: 40px; animation: marqueeSlide 26s linear infinite; }
+  .marquee-strip .marquee-track { display: inline-block; animation: marqueeSlide 26s linear infinite; }
   .marquee-strip span { font-family: var(--font-display); font-weight: 700; color: var(--ink-line); font-size: 15px; }
   .marquee-strip .mq-dot { color: #d16e90; margin: 0 14px; }
-  @keyframes marqueeSlide { from { transform: translateX(0); } to { transform: translateX(50%); } }
+  @keyframes marqueeSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .marquee-strip .marquee-track { animation: none; } }
 
   /* البطاقات = ورق مقصوص ملصوق بميل بسيط + شريط لاصق */
@@ -1232,6 +1232,43 @@
   }
   .friend-stamp-card { border: 1.5px solid var(--ink-line); border-radius: 4px 16px 4px 16px; }
   .signature-stamp-end { color: #b1476a; }
+
+  /* 🃏 عدّة الصور = رزمة صور ورقية مرمية على الصفحة (زي الفيديو المرفق) */
+  .polaroid-carousel-wrap {
+    background: var(--paper-2);
+    border: 1.5px solid var(--ink-line);
+    border-radius: 8px 20px 8px 20px;
+    box-shadow: var(--shadow-cut);
+    padding: 20px 14px 24px;
+  }
+  .polaroid-carousel-wrap::before,
+  .polaroid-carousel-wrap::after {
+    content: ""; position: absolute; z-index: 0;
+    left: 30px; right: 30px; top: 34px; bottom: 10px;
+    background: var(--paper);
+    border: 1.5px solid rgba(58, 37, 48, 0.55);
+    border-radius: 14px;
+    box-shadow: 0 6px 14px rgba(58, 37, 48, 0.16);
+    pointer-events: none;
+  }
+  .polaroid-carousel-wrap::before { transform: rotate(-2.4deg); }
+  .polaroid-carousel-wrap::after { transform: rotate(2deg); left: 38px; right: 24px; top: 38px; }
+  .polaroid-carousel-track { position: relative; z-index: 1; }
+  .polaroid-slide-item {
+    background: var(--paper);
+    border: 1.5px solid var(--ink-line);
+    border-radius: 10px;
+    box-shadow: 4px 5px 0 rgba(58, 37, 48, 0.14);
+    padding: 9px 9px 30px;                 /* إطار بولارويد بشريط ورقي تحت الصورة */
+    transform: rotate(var(--srot, 0deg));
+  }
+  .polaroid-slide-item:nth-child(odd) { --srot: -1.2deg; }
+  .polaroid-slide-item:nth-child(even) { --srot: 1deg; }
+  .polaroid-slide-item img, .polaroid-slide-item video { border-radius: 6px; }
+  .scrapbook-photos-grid > * {
+    border: 1.5px solid var(--ink-line);
+    box-shadow: 4px 5px 0 rgba(58, 37, 48, 0.14);
+  }
 </style>
 </head>
 <body>
@@ -1254,7 +1291,7 @@
 <div class="gift-canvas">
   <!-- الهيدر الفخم الشبيه بإهداء كتاب نادر مع العداد الذكي المباشر -->
   <header class="bespoke-header">
-    <div class="luxury-seal-badge">مساحة خاصة بمناسبة عيد ميلادك 🌿✨</div>
+    <div class="luxury-seal-badge">Special day for you… then it's special for us ✨</div>
     <h1 class="hero-main-title">كل سنة وإنتِ معانا يا <span class="shisho-glow">شيشو</span></h1>
     <p class="hero-dedication-quote">افتحي أي باب… كل مساحة هنا اتكتبت واتجمعت عشان تسيب ذكرى دافية تليق بيكي.</p>
 
@@ -1287,7 +1324,7 @@
 
   <!-- شريط متحرّك بروح المجلة المطبوعة -->
   <div class="marquee-strip" aria-hidden="true"><div class="marquee-track">
-    <span>كل سنة وإنتِ معانا يا شيشو</span><span class="mq-dot">✦</span><span>٩٩ سبب وسبب</span><span class="mq-dot">❤</span><span>ذكريات ما تتنسيش</span><span class="mq-dot">✿</span><span>الشلة كلها بتحبك</span><span class="mq-dot">✦</span><span>مساحة معمولة بحب</span><span class="mq-dot">❤</span><span>كل سنة وإنتِ معانا يا شيشو</span><span class="mq-dot">✦</span><span>٩٩ سبب وسبب</span><span class="mq-dot">❤</span><span>ذكريات ما تتنسيش</span><span class="mq-dot">✿</span><span>الشلة كلها بتحبك</span><span class="mq-dot">✦</span><span>مساحة معمولة بحب</span><span class="mq-dot">❤</span>
+    <span>كل سنة وإنتِ معانا يا شيشو</span><span class="mq-dot">✦</span><span>كل اللحظات حلوة معاكي</span><span class="mq-dot">❤</span><span>٩٩ سبب وسبب</span><span class="mq-dot">✿</span><span>ذكريات ما تتنسيش</span><span class="mq-dot">✦</span><span>الشلة كلها بتحبك</span><span class="mq-dot">❤</span><span>كل سنة وإنتِ معانا يا شيشو</span><span class="mq-dot">✦</span><span>كل اللحظات حلوة معاكي</span><span class="mq-dot">❤</span><span>٩٩ سبب وسبب</span><span class="mq-dot">✿</span><span>ذكريات ما تتنسيش</span><span class="mq-dot">✦</span><span>الشلة كلها بتحبك</span><span class="mq-dot">❤</span>
   </div></div>
 
   <!-- الأبواب والبطاقات بدون الشارات والوسوم الجانبية -->
