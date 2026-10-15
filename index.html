@@ -66,6 +66,7 @@
     pointer-events: none;
     z-index: 0;
     display: flex;
+    align-items: flex-start;
     justify-content: center;
     gap: 14px;
     padding: 0 10px;
@@ -79,7 +80,7 @@
     will-change: transform;
     backface-visibility: hidden;
   }
-  /* الحلقة تتكرر بدقة لأن كل صورة ليها margin تحتها (مش gap) */
+  /* الحلقة سلسه لأن المحتوى مكرر نصين بالظبط، و align-items: flex-start بيخلي ارتفاع العمود = ارتفاع المحتوى (مش شاشة العرض) عشان -50% يبقى نقطة التكرار الحقيقية */
   @keyframes waterfallFlow {
     from { transform: translate3d(0, -50%, 0); }
     to   { transform: translate3d(0, 0, 0); }
@@ -176,21 +177,6 @@
     position: relative;
     z-index: 2;
   }
-  /* الشريط العلوي */
-  .top-action-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  .edition-number {
-    font-family: var(--font-heading);
-    font-size: 13.5px;
-    letter-spacing: 1.5px;
-    color: var(--gold-warm);
-    opacity: 0.85;
-  }
-
   /* الهيدر الفخم المخصص */
   .bespoke-header {
     text-align: center;
@@ -1159,11 +1145,6 @@
 <div aria-hidden="true" class="velvet-depth-overlay"></div>
 
 <div class="gift-canvas">
-  <!-- الشريط العلوي الفخم -->
-  <div class="top-action-bar">
-    <div class="edition-number">مجموعة خاصة • ٢٠٢٥</div>
-  </div>
-
   <!-- الهيدر الفخم الشبيه بإهداء كتاب نادر مع العداد الذكي المباشر -->
   <header class="bespoke-header">
     <div class="luxury-seal-badge">مساحة خاصة بمناسبة عيد ميلادك 🌿✨</div>
