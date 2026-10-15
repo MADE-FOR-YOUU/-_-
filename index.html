@@ -425,10 +425,11 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    background: var(--paper);
     font-family: var(--font-heading);
-    font-size: 23px;
+    font-size: 25px;
     font-weight: 800;
-    color: rgba(233, 145, 173, 0.12);
+    color: var(--gold-warm);
     line-height: 1;
     pointer-events: none;
   }
@@ -1044,11 +1045,6 @@
     font-size: 19px;
     color: var(--ink-primary);
     font-weight: 700;
-  }
-  .friend-view-label {
-    font-size: 13.5px;
-    color: var(--gold-warm);
-    font-weight: 500;
   }
 
   .single-friend-view {
@@ -2070,7 +2066,6 @@ function openSection(idx) {
             ${firstPhoto ? `<img src="${esc(resolvePath(firstPhoto, "images"))}" alt="${esc(f.name)}" onerror="this.remove()">` : ""}
           </div>
           <div class="friend-card-name">${esc(f.name)}</div>
-          <span class="friend-view-label">افتحي الرسائل ✦</span>
         </button>
       `;
     }).join("") + `</div>`;
@@ -2515,6 +2510,11 @@ function setupCarousel() {
     const activeIndex = carouselActiveIndex(track);
     Array.from(dotsContainer.children).forEach((dot, idx) => {
       dot.classList.toggle("active", idx === activeIndex);
+    });
+    /* لو الفيديو الشغال بقى بره الشاشة (سوّقنا لسلايد تاني) نوقفه فورًا */
+    Array.from(track.children).forEach((slide, idx) => {
+      const v = slide.querySelector("video");
+      if (v && idx !== activeIndex && !v.paused) v.pause();
     });
   }, { passive: true });
 }
