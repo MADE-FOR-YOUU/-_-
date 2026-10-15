@@ -152,14 +152,14 @@
   .bespoke-header > *, .luxury-card { opacity: 0; }
   body.site-revealed .bespoke-header > * { animation: doorReveal .85s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--hd, 0s); }
   body.site-revealed .luxury-card { animation: doorReveal .85s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--d, 0s); }
-  @keyframes doorReveal { from { opacity: 0; transform: translateY(30px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes doorReveal { from { opacity: 0; transform: translateY(30px) scale(0.985) rotate(0deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(var(--tilt, 0deg)); } }
 
   /* نبضة "فتح الباب" على البطاقة وقت النقر */
   body.site-revealed .luxury-card.door-kick { animation: doorKick 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
   @keyframes doorKick {
-    0% { transform: none; box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.25); }
-    35% { transform: scale(1.035) translateY(-8px); box-shadow: 0 0 46px rgba(233, 145, 173, 0.5); }
-    100% { transform: none; box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.25); }
+    0% { transform: rotate(var(--tilt, 0deg)); box-shadow: var(--shadow-cut); }
+    35% { transform: rotate(0deg) scale(1.035) translateY(-8px); box-shadow: 0 0 46px rgba(233, 145, 173, 0.5); }
+    100% { transform: rotate(var(--tilt, 0deg)); box-shadow: var(--shadow-cut); }
   }
   @media (prefers-reduced-motion: reduce) {
     .intro-curtain { display: none !important; }
@@ -1134,6 +1134,94 @@
     .letter-parchment-box { font-size: 20px; padding: 24px 18px; }
     .hero-main-title { font-size: 34px; }
   }
+
+  /* ============================================================
+     ✂️  الطبقة الإبداعية: كولاج ورق مقصوص ومُلصق (Not-AI scrapbook)
+     تتجاوز كل ستايلات الأعلى عشان تعطي طابعًا يدويًا غير متماثل
+     ============================================================ */
+  :root {
+    --paper: #fffdf7;
+    --paper-2: #fbeede;
+    --tape: rgba(244, 200, 214, 0.55);
+    --ink-line: #3a2530;
+    --shadow-cut: 6px 8px 0 rgba(58, 37, 48, 0.14);
+  }
+  body {
+    /* ورق كرافت دافئ بدل التدرّج الناعم */
+    background:
+      radial-gradient(circle at 12% 18%, rgba(244, 200, 214, 0.35), transparent 42%),
+      radial-gradient(circle at 88% 82%, rgba(255, 214, 165, 0.30), transparent 46%),
+      repeating-linear-gradient(0deg, rgba(58, 37, 48, 0.020) 0 2px, transparent 2px 5px),
+      linear-gradient(160deg, #fbeede 0%, #f7e3d6 100%);
+    background-attachment: fixed;
+  }
+  .velvet-depth-overlay { opacity: 0.35; }
+
+  /* الشريط المتحرّك — يعطي إحساس المجلة المطبوعة */
+  .marquee-strip {
+    overflow: hidden; white-space: nowrap; border-block: 2px dashed var(--ink-line);
+    padding: 8px 0; margin: 4px 0 26px; transform: rotate(-0.6deg);
+    background: var(--paper);
+  }
+  .marquee-strip .marquee-track { display: inline-block; padding-inline-end: 40px; animation: marqueeSlide 26s linear infinite; }
+  .marquee-strip span { font-family: var(--font-display); font-weight: 700; color: var(--ink-line); font-size: 15px; }
+  .marquee-strip .mq-dot { color: #d16e90; margin: 0 14px; }
+  @keyframes marqueeSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee-strip .marquee-track { animation: none; } }
+
+  /* البطاقات = ورق مقصوص ملصوق بميل بسيط + شريط لاصق */
+  .luxury-card {
+    background: var(--paper);
+    border: 1.5px solid var(--ink-line);
+    border-radius: 4px 18px 4px 18px;      /* حواف غير متماثلة = مقص يدوي */
+    box-shadow: var(--shadow-cut);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    overflow: visible;
+  }
+  .luxury-card::before { display: none; }
+  .luxury-card::after {                    /* شريط اللاصق الشفاف فوق الورقة */
+    content: ""; position: absolute; top: -12px; left: 50%;
+    width: 92px; height: 26px; transform: translateX(-50%) rotate(-2.4deg);
+    background: var(--tape); border: 1px dashed rgba(58, 37, 48, 0.28);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset; pointer-events: none;
+  }
+  body.site-revealed .luxury-card { transform: rotate(var(--tilt, 0deg)); }
+  .luxury-card:hover { transform: rotate(0deg) translateY(-4px); box-shadow: 9px 12px 0 rgba(58, 37, 48, 0.16); }
+  .luxury-card:active { transform: rotate(0deg) translateY(1px) scale(0.99); }
+
+  /* الشارات والأيقونات = أختام حبر */
+  .luxury-seal-icon { border: 1.5px solid var(--ink-line); border-radius: 50%; }
+  .card-curated-title { position: relative; }
+  .card-curated-title::after {             /* خط تسطير يدوي */
+    content: ""; position: absolute; right: 0; bottom: -6px; width: 46px; height: 3px;
+    background: #d16e90; border-radius: 3px; transform: rotate(-1.4deg);
+  }
+  .luxury-seal-badge, .dialog-stamp-chip, .chest-ribbon-tag {
+    border: 1.5px solid var(--ink-line); background: var(--paper);
+    transform: rotate(-1.2deg); box-shadow: 3px 3px 0 rgba(58, 37, 48, 0.12);
+  }
+  .reasons-counter-orb { border: 1.5px solid var(--ink-line); color: var(--ink-line); }
+
+  /* الأزرار = أزرار مطبوعة بحبر */
+  .btn-gold-action { border: 1.5px solid var(--ink-line); box-shadow: 3px 3px 0 rgba(58, 37, 48, 0.16); }
+  .btn-gold-action:hover { transform: translateY(-2px); box-shadow: 5px 6px 0 rgba(58, 37, 48, 0.18); }
+  .btn-silk-outline { border-color: var(--ink-line); }
+
+  /* العدّاد = بطاقة تذكرة مثقوبة */
+  .love-counter-capsule { background: var(--paper); border: 1.5px dashed var(--ink-line); transform: rotate(-0.5deg); }
+  .counter-unit-box { border: 1px dashed rgba(58, 37, 48, 0.30); }
+  .counter-number-val { color: #b1476a; }
+
+  /* النافذة = ورقة كبيرة مثبّتة */
+  .luxury-page-dialog { border: 1.5px solid var(--ink-line); border-radius: 6px 22px 6px 22px; }
+  .dialog-top-crown { border-bottom: 1.5px dashed var(--ink-line); }
+  .btn-close-luxury { border: 1.5px solid var(--ink-line); }
+  .letter-parchment-box, .friend-letter-card, .reasons-chest-stage, .cassette-card {
+    background: var(--paper); border: 1.5px solid rgba(58, 37, 48, 0.55);
+    box-shadow: var(--shadow-cut);
+  }
+  .friend-stamp-card { border: 1.5px solid var(--ink-line); border-radius: 4px 16px 4px 16px; }
+  .signature-stamp-end { color: #b1476a; }
 </style>
 </head>
 <body>
@@ -1186,6 +1274,11 @@
       </div>
     </div>
   </header>
+
+  <!-- شريط متحرّك بروح المجلة المطبوعة -->
+  <div class="marquee-strip" aria-hidden="true"><div class="marquee-track">
+    <span>كل سنة وإنتِ معانا يا شيشو</span><span class="mq-dot">✦</span><span>٩٩ سبب وسبب</span><span class="mq-dot">❤</span><span>ذكريات ما تتنسيش</span><span class="mq-dot">✿</span><span>الشلة كلها بتحبك</span><span class="mq-dot">✦</span><span>مساحة معمولة بحب</span><span class="mq-dot">❤</span><span>كل سنة وإنتِ معانا يا شيشو</span><span class="mq-dot">✦</span><span>٩٩ سبب وسبب</span><span class="mq-dot">❤</span><span>ذكريات ما تتنسيش</span><span class="mq-dot">✿</span><span>الشلة كلها بتحبك</span><span class="mq-dot">✦</span><span>مساحة معمولة بحب</span><span class="mq-dot">❤</span>
+  </div></div>
 
   <!-- الأبواب والبطاقات بدون الشارات والوسوم الجانبية -->
   <main class="curated-editorial-flow" id="scrapbookContainer">
@@ -1971,7 +2064,11 @@ document.getElementById("readerModal").addEventListener("click", e => {
    🎬 افتتاحية الموقع + ظهور الأبواب بالتتابع
    ============================================================ */
 (function () {
-  document.querySelectorAll(".luxury-card").forEach((c, i) => c.style.setProperty("--d", (0.15 + i * 0.13) + "s"));
+  const tilts = [-1.4, 1.1, -0.8, 1.3, -1.1, 0.9, -1.3];
+  document.querySelectorAll(".luxury-card").forEach((c, i) => {
+    c.style.setProperty("--d", (0.15 + i * 0.13) + "s");
+    c.style.setProperty("--tilt", (tilts[i % tilts.length]) + "deg");
+  });
   document.querySelectorAll(".bespoke-header > *").forEach((el, i) => el.style.setProperty("--hd", (0.1 + i * 0.12) + "s"));
   const intro = document.getElementById("introCurtain");
   if (!intro) { document.body.classList.add("site-revealed"); return; }
