@@ -350,7 +350,7 @@
   }
   .editorial-row-trio {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
   }
   @media (max-width: 960px) {
@@ -1434,7 +1434,7 @@
 
     <!-- المستوى الثاني: بطاقة الشلة الكبرى "أنا وصحابنا" مع صور الأصدقاء الحقيقية من الخارج -->
     <section class="editorial-row-wide">
-      <article aria-label="أنا وصحابنا" class="luxury-card card-friends-grand" onclick="triggerCardOpen(3)" role="button" tabindex="0">
+      <article aria-label="أنا وصحابنا" class="luxury-card card-friends-grand" onclick="triggerCardOpen(2)" role="button" tabindex="0">
         <div class="card-velvet-ribbon"></div>
         <div class="friends-header-flex">
           <div>
@@ -1456,27 +1456,10 @@
       </article>
     </section>
 
-    <!-- المستوى الثالث: ثلاثية الذكريات، الصوتيات، والدعوات بدون الشارات الجانبية -->
+    <!-- المستوى الثالث: الصوتيات والدعوات بدون الشارات الجانبية -->
     <section class="editorial-row-trio">
-      <!-- بطاقة: ذكرياتنا -->
-      <article aria-label="ذكرياتنا" class="luxury-card" onclick="triggerCardOpen(2)" role="button" tabindex="0">
-        <div class="card-curated-top">
-          <div class="luxury-seal-icon">
-            <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path></svg>
-          </div>
-        </div>
-        <div class="card-curated-body">
-          <h2 class="card-curated-title">ذكرياتنا</h2>
-          <p class="card-curated-desc">لحظات وتفاصيل متصورة مهما عدت الأيام ماتتنسيش وسيرتها بتفرح.</p>
-        </div>
-        <div class="card-curated-action">
-          <span>افتحي المعرض</span>
-          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-        </div>
-      </article>
-
       <!-- بطاقة: رسائل بصوتي -->
-      <article aria-label="رسائل بصوتي" class="luxury-card" onclick="triggerCardOpen(4)" role="button" tabindex="0">
+      <article aria-label="رسائل بصوتي" class="luxury-card" onclick="triggerCardOpen(3)" role="button" tabindex="0">
         <div class="card-curated-top">
           <div class="luxury-seal-icon">
             <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"></path></svg>
@@ -1493,7 +1476,7 @@
       </article>
 
       <!-- بطاقة: حاجات نفسي فيها ليكي -->
-      <article aria-label="حاجات نفسي فيها ليكي" class="luxury-card" onclick="triggerCardOpen(5)" role="button" tabindex="0">
+      <article aria-label="حاجات نفسي فيها ليكي" class="luxury-card" onclick="triggerCardOpen(4)" role="button" tabindex="0">
         <div class="card-curated-top">
           <div class="luxury-seal-icon">
             <svg viewBox="0 0 24 24"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"></path></svg>
@@ -1512,7 +1495,7 @@
 
     <!-- المستوى الرابع: زاوية «احكيلي» — محادثة ذكية تسمعها في أي وقت -->
     <section class="editorial-row-wide">
-      <article aria-label="احكيلي" class="luxury-card card-ai-talk" onclick="triggerCardOpen(7)" role="button" tabindex="0">
+      <article aria-label="احكيلي" class="luxury-card card-ai-talk" onclick="triggerCardOpen(6)" role="button" tabindex="0">
         <div class="card-velvet-ribbon"></div>
         <div class="card-curated-top">
           <div class="luxury-seal-icon">
@@ -1532,7 +1515,7 @@
 
     <!-- المستوى الخامس: باب الطوارئ والاتصال المفتوح دائماً -->
     <section class="editorial-row-wide">
-      <article aria-label="لو محتاجالي لأي حاجة" class="luxury-card card-emergency-call" onclick="triggerCardOpen(6)" role="button" tabindex="0">
+      <article aria-label="لو محتاجالي لأي حاجة" class="luxury-card card-emergency-call" onclick="triggerCardOpen(5)" role="button" tabindex="0">
         <div class="card-velvet-ribbon"></div>
         <div class="card-curated-top">
           <div class="luxury-seal-icon">
@@ -1747,17 +1730,6 @@ const SECTIONS = [
     ]}
   },
   {
-    icon: ICONS.gallery,
-    title: "ذكرياتنا", 
-    desc: "لحظات وتفاصيل متصورة مهما حصل ماتتنسيش",
-    body: { type: "gallery", photos: [
-      { src: "", video: "", caption: "أول لحظة" },
-      { src: "", video: "", caption: "ليلة ماتتنسيش" },
-      { src: "", video: "", caption: "ضحكة ما اتحسبتش" },
-      { src: "", video: "", caption: "سهرة عادية… استثنائية" },
-    ]}
-  },
-  {
     icon: ICONS.users,
     title: "أنا وصحابنا", 
     desc: "كلام من القلب وتواقيع وذكريات كل واحد في الشلة",
@@ -1884,10 +1856,6 @@ const SECTIONS = [
     title: "حاجات نفسي فيها ليكي", 
     desc: "أمنيات ودعوات خالصة من قلبي ليكي في سنتك الجديدة",
     body: { type: "list", items: [
-      { text: "تفضلي دايمًا مبسوطة بجد — مش عشان الدنيا، عشان إنتِ تستاهلي." },
-      { text: "كل حاجة تحلمي بيها تجيلك وإنتِ مستغربة من كرم ربنا." },
-      { text: "تفتكري في كل وقت صعب إنك أقوى بمراحل مما تتخيلي." },
-      { text: "وإنتِ بتضحكي، الصوت والطاقة بيوصلوا يطمنونا كلنا." },
       { text: "إني أشوفك أحسن واحدة ودايماً ناجحة." },
       { text: "إني أشوفك شاطرة في التايكندو دايماً ومستواكي يبقى عالي." },
       { text: "إني ما أشوفكيش زعلانة أبداً." },
@@ -2068,7 +2036,6 @@ function openSection(idx) {
   } else if (b.type === "reasons") {
     contentHTML = `
       <div class="reasons-chest-stage">
-        <div class="chest-ribbon-tag">من صندوق الأسرار ✦</div>
         <div class="reason-main-quote" id="reasonTextContent">اضغطي على الزرار لتسحبي سبباً دافئاً من الـ 99 سبب ✨</div>
       </div>
       <button class="btn-gold-action" onclick="showNextReason()" type="button">
@@ -2410,7 +2377,7 @@ function renderFriendDetail(k) {
     slidesHTML += `<div class="polaroid-slide-item"><img src="${esc(resolvePath(v, "images"))}" alt="" onerror="handleMediaError(this)"></div>`;
   });
   (friend.videos || []).filter(Boolean).forEach(v => {
-    slidesHTML += `<div class="polaroid-slide-item"><video src="${esc(resolvePath(v, "videos"))}" controls playsinline preload="metadata" onerror="handleMediaError(this)"></video></div>`;
+    slidesHTML += `<div class="polaroid-slide-item"><video src="${esc(resolvePath(v, "videos"))}#t=0.1" controls playsinline preload="auto" onerror="handleMediaError(this)"></video></div>`;
   });
   const detailHTML = `
     <div class="single-friend-view">
@@ -2512,5 +2479,63 @@ document.getElementById("readerModal").addEventListener("click", e => {
   intro.addEventListener("click", endIntro);
   setTimeout(endIntro, reduce ? 0 : 2900);
 })();
+
+/* ============================================================
+   ⚡ التحميل المسبق لكل صور وفيديوهات الصحاب
+   أول ما الصفحة تفتح نبدأ نجيب كل الملفات في الخلفية (بالترتيب
+   عشان مانضغطش النت)، فلما تفتحي بطاقة أي صاحب كل حاجة جاهزة فورًا.
+   ============================================================ */
+function preloadAllFriendMedia() {
+  const friendsSec = SECTIONS.find(s => s.body && s.body.type === "friends");
+  if (!friendsSec) return;
+  const imgs = [], vids = [];
+  friendsSec.body.friends.forEach(f => {
+    (f.photos || []).filter(Boolean).forEach(p => imgs.push(resolvePath(p, "images")));
+    (f.videos || []).filter(Boolean).forEach(v => vids.push(resolvePath(v, "videos")));
+  });
+
+  // دالة مساعدة: تنادي callback مرة واحدة بس مهما حصل (حتى لو الطلب اتعلّق)
+  function once(el, events, cb, timeoutMs) {
+    let fired = false;
+    const fire = () => { if (fired) return; fired = true; cb(); };
+    events.forEach(ev => el.addEventListener(ev, fire, { once: true }));
+    setTimeout(fire, timeoutMs);
+  }
+
+  // الصور أولًا على دفعات صغيرة
+  let i = 0;
+  function nextImageBatch() {
+    const chunk = imgs.slice(i, i + 8); i += 8;
+    if (!chunk.length) { startVideos(); return; }
+    let done = 0;
+    chunk.forEach(src => {
+      const im = new Image();
+      once(im, ["load", "error"], () => {
+        if (++done === chunk.length) setTimeout(nextImageBatch, 40);
+      }, 10000);
+      im.src = src;
+    });
+  }
+
+  // بعدين الفيديوهات بالتتابع (٣ مع بعض كحد أقصى)
+  function startVideos() {
+    let v = 0;
+    function next() {
+      if (v >= vids.length) return;
+      const el = document.createElement("video");
+      el.preload = "auto";
+      el.muted = true;
+      el.style.cssText = "position:fixed;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;";
+      // نستني canplaythrough (الملف اتحمّل بالكامل) بدل loadeddata عشان يخلّص التنزيل فعليًا
+      once(el, ["canplaythrough", "error"], () => { el.remove(); next(); }, 45000);
+      el.src = vids[v++];
+      document.body.appendChild(el);
+    }
+    for (let k = 0; k < 3 && k < vids.length; k++) next();
+  }
+
+  nextImageBatch();
+}
+window.addEventListener("load", () => setTimeout(preloadAllFriendMedia, 600));
 </script>
 </body></html>
