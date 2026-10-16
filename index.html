@@ -1935,13 +1935,19 @@ function setupWaterfallBackground() {
     for (let r = 0; r < reps; r++) seq = seq.concat(mine);
     const items = seq.map((name) => ({ name, r: ratios[Math.floor(Math.random() * ratios.length)] }));
     const loop = items.concat(items);
-    const dur = 60 + (c % 3) * 12 + c * 4;
-    const delay = -((c * 23) % dur);
-    html += `<div class="waterfall-col" style="animation-duration:${dur}s;animation-delay:${delay}s">` +
+    html += `<div class="waterfall-col">` +
       loop.map(it => `<div class="waterfall-thumb ${it.r}"><img src="thumbs/${esc(it.name)}" data-name="${esc(it.name)}" alt="" decoding="async" onerror="wfFallback(this)"></div>`).join("") +
       `</div>`;
   }
   box.innerHTML = html;
+  /* 🎯 سرعة واحدة موحّدة لكل الأعمدة وأبطأ شوية: نقيس ارتفاع كل عمود بعد البناء،
+     والمدة = نصف الارتفاع (مسافة الحلقة) ÷ السرعة المطلوبة — فبانぢاع أعمدة بنفس السرعة البصرية بالظبط */
+  const WF_SPEED_PX_PER_SEC = 80;
+  Array.from(box.children).forEach((col, c) => {
+    const dur = Math.max(30, (col.offsetHeight / 2) / WF_SPEED_PX_PER_SEC);
+    col.style.animationDuration = dur.toFixed(1) + "s";
+    col.style.animationDelay = "-" + ((c * 11) % Math.round(dur)) + "s";
+  });
 }
 window.addEventListener("DOMContentLoaded", setupWaterfallBackground);
 window.addEventListener("resize", () => { clearTimeout(window.__wfT); window.__wfT = setTimeout(setupWaterfallBackground, 250); });
