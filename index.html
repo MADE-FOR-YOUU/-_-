@@ -2288,6 +2288,10 @@ const AI_SYSTEM_PROMPT = `# شخصية علي في الكلام مع عائشه
 
 "إيه اللي حصل احكيلي."
 
+## الذاكرة
+
+في نهاية كل رسالة نظام بتلاقي قسم "ذاكرتك مع عائشه" لو فيه معلومات اتعلمتها من شاتاتكم قبل كده. دي معلومات حقيقية هي حكتها فعلًا، فاستخدمها بذكاء وبحيادية: لو قالت حاجة ليها علاقة بلي فات، افتكرها واربطها بالكلام الحالي بشكل طبيعي، من غير ما تقولها "زي ما قلتيلي قبل كده" بشكل رسمي. ومتخترعش تفاصيل مش موجودة في الذاكرة، ومتحشرهاش في كل رد لو مش مناسبة.
+
 ## القاعدة النهائية
 
 قبل كل رد، افهم طبيعة رسالتها: هل هي بتتكلم عادي، بتهزر، بتشاركك حاجة حلوة، ولا محتاجة تفضفض؟
@@ -2300,6 +2304,78 @@ let chatMessages = [];   /* { role: "user" | "model", text } */
 let chatBusy = false;
 let chatNotice = "";
 const CHAT_GREETING = { role: "model", text: "إيه يا عائشه، في إيه؟ احكيلي." };
+
+/* ============================================================
+   🧠 ذاكرة الشات — بيتعلّم من محادثاتكم مع بعض
+   كل شوية بتتلخّص المحادثة لمعلومات ثابتة (عن عائشه، ذوقها،
+   أسلوب الكلام اللي يريحها، والمواقف الشغالة)، وبتتحفظ على
+   الجهاز وبتتزرع في برومبت الشخصية في كل رسالة جديدة —
+   عشان يفضل فاهمها حتى بعد ما تقفل الصفحة.
+   ============================================================ */
+const CHAT_STORE_KEY = "aisha-chat-memory-v1";
+const CHAT_MSGS_KEY = "aisha-chat-msgs-v1";
+const CHAT_LEARN_EVERY = 6;      /* رسالة جديدة بين كل تعلّم والتاني */
+const CHAT_MEMORY_MAX = 4000;    /* أقصى طول للذاكرة بالحروف */
+
+let chatMemory = "";             /* ملاحظات متعلّمة من الشواتات اللي فاتت */
+let chatLearnedCount = 0;        /* عدد الرسائل اللي اتعلّمت منها لحد دلوقتي */
+
+function chatStoreRead() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(CHAT_STORE_KEY) || "null");
+    if (raw && typeof raw === "object") {
+      chatMemory = typeof raw.memory === "string" ? raw.memory.slice(0, CHAT_MEMORY_MAX) : "";
+      chatLearnedCount = Number.isFinite(raw.learned) ? raw.learned : 0;
+    }
+  } catch (e) { /* تخزين معطّل → نبدأ من الصفر */ }
+}
+function chatStoreWrite() {
+  try { localStorage.setItem(CHAT_STORE_KEY, JSON.stringify({ memory: chatMemory, learned: chatLearnedCount })); } catch (e) {}
+}
+function chatMsgsSave() {
+  try { localStorage.setItem(CHAT_MSGS_KEY, JSON.stringify(chatMessages.slice(-100))); } catch (e) {}
+}
+function chatMsgsLoad() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(CHAT_MSGS_KEY) || "[]");
+    if (Array.isArray(arr)) {
+      chatMessages = arr.filter(m => m && (m.role === "user" || m.role === "model") && typeof m.text === "string").slice(-100);
+    }
+  } catch (e) {}
+}
+
+/* الذاكرة بتتزرع في آخر برومبت الشخصية كبيانات، والبرومبت نفسه بيشرح ليه موجودة وإزاي تتعامل معاها */
+function buildChatSystemPrompt() {
+  if (!chatMemory) return AI_SYSTEM_PROMPT;
+  return AI_SYSTEM_PROMPT + "\n\n## ذاكرتك مع عائشه (من شاتاتكم اللي فاتت)\n" + chatMemory;
+}
+
+const CHAT_LEARN_PROMPT = `انت بتجمع ذاكرة دائمة عن عائشه من الشات بتاعها مع نسخة علي.
+هيتبعتلك آخر محادثة بينكم + الذاكرة الحالية، ومهمتك تطلع الذاكرة المحدّثة بس.
+
+الصيغة: جمل قصيرة، كل جملة سطر يبدأ بـ "- ".
+المواضيع اللي تهمك: معلومات عن حياتها واهلها وصحابها، اهتماماتها وحاجات بتحبها، أسلوب الكلام اللي يريحها واللي يضايقها، قصص ومواقف شغالة اتكلمتوا فيها، وحاجات طلبتها تفتكرها.
+
+القواعد:
+- ماتكتبش معلومات مش واضحة أو استنتاجات من عندك؛ بس اللي هي قالته أو ما ينضاف منه بوضوح.
+- لو معلومة قديمة اتغيرت، حدّثها بدل ما تتراكم.
+- الأقصى ٣٠ سطر.
+- اخرج الذاكرة بس، من غير مقدمات أو كلام تمهيدي.`;
+
+async function learnFromChat() {
+  if (chatMessages.length < 4) return;
+  const convo = chatMessages.slice(-24).map(m => (m.role === "user" ? "عائشه: " : "أنا: ") + m.text).join("\n");
+  const payload = (chatMemory ? "الذاكرة الحالية:\n" + chatMemory + "\n\n" : "") + "الشات الأخير:\n" + convo;
+  try {
+    const out = await callGemini([{ role: "user", parts: [{ text: payload }] }], CHAT_LEARN_PROMPT);
+    const clean = (out || "").split("\n").map(s => s.trim()).filter(s => s.startsWith("- ")).slice(0, 30).join("\n");
+    if (clean.length > 10) {
+      chatMemory = clean.slice(0, CHAT_MEMORY_MAX);
+      chatLearnedCount = chatMessages.length;
+      chatStoreWrite();
+    }
+  } catch (e) { console.warn("learn error:", e); }
+}
 
 function renderChatFeed(typing) {
   const feed = document.getElementById("chatFeed");
@@ -2314,6 +2390,8 @@ function renderChatFeed(typing) {
 }
 
 function initChat() {
+  chatStoreRead();
+  chatMsgsLoad();
   renderChatFeed(false);
   const input = document.getElementById("chatInput");
   if (!input) return;
@@ -2326,7 +2404,7 @@ function initChat() {
   });
 }
 
-async function callGemini(contents) {
+async function callGemini(contents, systemInstruction) {
   let lastErr = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     let res;
@@ -2335,7 +2413,7 @@ async function callGemini(contents) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          systemInstruction: AI_SYSTEM_PROMPT,
+          systemInstruction: systemInstruction || AI_SYSTEM_PROMPT,
           contents: contents
         })
       });
@@ -2365,6 +2443,7 @@ async function sendChatMessage() {
   if (!text) return;
 
   chatMessages.push({ role: "user", text: text });
+  chatMsgsSave();
   chatNotice = "";
   if (input) { input.value = ""; input.style.height = "auto"; }
   chatBusy = true;
@@ -2373,8 +2452,11 @@ async function sendChatMessage() {
 
   const contents = chatMessages.slice(-24).map(m => ({ role: m.role, parts: [{ text: m.text }] }));
   try {
-    const reply = await callGemini(contents);
+    const reply = await callGemini(contents, buildChatSystemPrompt());
     chatMessages.push({ role: "model", text: reply });
+    chatMsgsSave();
+    /* كل ٦ رسائل جديدة نخليه يراجع الشات ويحدّث ذاكرته، في الخلفية من غير ما نوقفها */
+    if (chatMessages.length - chatLearnedCount >= CHAT_LEARN_EVERY) learnFromChat();
   } catch (err) {
     console.warn("chat error:", err);
     chatNotice = "حصلت مشكلة صغيرة في الاتصال… جربي تبعتي تاني بعد شوية. 🌿";
