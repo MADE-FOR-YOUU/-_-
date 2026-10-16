@@ -1450,7 +1450,7 @@
           <div class="friends-avatars-constellation" id="outerFriendsAvatars"></div>
         </div>
         <div class="card-curated-action" style="margin-top: 24px;">
-          <span>تصفحي رسائل أصحابنا الـ ١٦</span>
+          <span>تصفحي رسائل أصحابنا الـ ١٨</span>
           <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
         </div>
       </article>
@@ -1853,6 +1853,20 @@ const SECTIONS = [
         photos: ["hala1.jpg","hala2.jpg"],
         videos: [],
       },
+      {
+        name: "Alaa",
+        message: "Happy birthday 3ayoushiii 💗really I love you so soooo much 💗I hope your day is as beautiful as you are. Never stop being the amazing person you are .love you endlessy 💋💋💋",
+        voice: "",
+        photos: ["alaa/alaa1.jpg","alaa/alaa2.jpg","alaa/alaa3.jpg","alaa/alaa4.jpg"],
+        videos: [],
+      },
+      {
+        name: "Anas",
+        message: "Kol sana w enty tayba ya shosha w 3obal million sana rbna y5leky lyna w tfdly m3ana 3latol w nfdl tool El 3omr so7ab 😍❤️❤️",
+        voice: "",
+        photos: ["anas/anas1.jpg","anas/anas2.jpg","anas/anas3.jpg","anas/anas4.jpg"],
+        videos: ["anas/anas1.mp4"],
+      },
     ]}
   },
   {
@@ -1898,7 +1912,7 @@ const SECTIONS = [
 ];
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const resolvePath = (path, folder) => path.includes("/") ? path : `${folder}/${path}`;
+const resolvePath = (path, folder) => /^(images|thumbs|videos|audio)\//.test(path) ? path : `${folder}/${path}`;
 
 /* ============================================================
    🌊 شلال الصور في الخلفية
@@ -1907,7 +1921,7 @@ const resolvePath = (path, folder) => path.includes("/") ? path : `${folder}/${p
    موجودة في images/، وحط نسخة مصغرة بنفس الاسم في thumbs/ (لو مفيش نسخة مصغرة بيستخدم الصورة الأصلية).
    ============================================================ */
 const WATERFALL_PHOTOS = [
-  "ahmed1.jpg", "ahmed2.jpg", "ahmed3.jpg", "ahmed4.jpg", "ahmed5.jpg", "ahmed6.jpg", "ahmed7.jpg", "ali1.jpg", "ali2.jpg", "ali3.jpg", "ali4.jpg", "ali5.jpg", "ali6.jpg", "ali7.jpg", "ali8.jpg", "eman1.jpg", "eman10.jpg", "eman11.jpg", "eman2.jpg", "eman3.jpg", "eman4.jpg", "eman5.jpg", "eman6.jpg", "eman7.jpg", "eman8.jpg", "eman9.jpg", "eyad1.jpg", "eyad2.jpg", "eyad3.jpg", "eyad4.jpg", "eyad5.jpg", "eyad6.jpg", "gamila1.jpg", "gamila10.jpg", "gamila2.jpg", "gamila3.jpg", "gamila4.jpg", "gamila5.jpg", "gamila6.jpg", "gamila7.jpg", "gamila8.jpg", "gamila9.jpg", "hana1.jpg", "hana10.jpg", "hana11.jpg", "hana2.jpg", "hana3.jpg", "hana4.jpg", "hana5.jpg", "hana6.jpg", "hana7.jpg", "hana8.jpg", "hana9.jpg", "jana1.jpg", "jana10.jpg", "jana2.jpg", "jana3.jpg", "jana4.jpg", "jana5.jpg", "jana6.jpg", "jana7.jpg", "jana8.jpg", "jana9.jpg", "logy1.jpg", "logy10.jpg", "logy11.jpg", "logy2.jpg", "logy3.jpg", "logy4.jpg", "logy5.jpg", "logy6.jpg", "logy7.jpg", "logy8.jpg", "logy9.jpg",  "mohamed1.jpg", "mohamed10.jpg", "mohamed11.jpg", "mohamed2.jpg", "mohamed3.jpg", "mohamed4.jpg", "mohamed5.jpg", "mohamed6.jpg", "mohamed7.jpg", "mohamed8.jpg", "mohamed9.jpg", "raghad1.jpg", "raghad2.jpg", "raghad3.jpg", "hala1.jpg", "hala2.jpg", "rod1.jpg", "rod2.jpg", "rod3.jpg", "rod4.jpg", "rovan1.jpg", "rovan10.jpg", "rovan2.jpg", "rovan3.jpg", "rovan4.jpg", "rovan5.jpg", "rovan6.jpg", "rovan7.jpg", "rovan8.jpg", "rovan9.jpg", "soaad1.jpg", "soaad10.jpg", "soaad2.jpg", "soaad3.jpg", "soaad4.jpg", "soaad5.jpg", "soaad6.jpg", "soaad7.jpg", "soaad8.jpg", "soaad9.jpg", "youssef1.jpg", "youssef2.jpg", "youssef3.jpg", "youssef4.jpg", "youssef5.jpg", "youssef6.jpg", "youssef7.jpg", "youssef8.jpg", "youssef9.jpg", "zeina1.jpg", "zeina2.jpg", "zeina3.jpg", "zeina4.jpg", "zeina5.jpg", "zeina6.jpg",
+  "ahmed1.jpg", "ahmed2.jpg", "ahmed3.jpg", "ahmed4.jpg", "ahmed5.jpg", "ahmed6.jpg", "ahmed7.jpg", "ali1.jpg", "ali2.jpg", "ali3.jpg", "ali4.jpg", "ali5.jpg", "ali6.jpg", "ali7.jpg", "ali8.jpg", "eman1.jpg", "eman10.jpg", "eman11.jpg", "eman2.jpg", "eman3.jpg", "eman4.jpg", "eman5.jpg", "eman6.jpg", "eman7.jpg", "eman8.jpg", "eman9.jpg", "eyad1.jpg", "eyad2.jpg", "eyad3.jpg", "eyad4.jpg", "eyad5.jpg", "eyad6.jpg", "gamila1.jpg", "gamila10.jpg", "gamila2.jpg", "gamila3.jpg", "gamila4.jpg", "gamila5.jpg", "gamila6.jpg", "gamila7.jpg", "gamila8.jpg", "gamila9.jpg", "hana1.jpg", "hana10.jpg", "hana11.jpg", "hana2.jpg", "hana3.jpg", "hana4.jpg", "hana5.jpg", "hana6.jpg", "hana7.jpg", "hana8.jpg", "hana9.jpg", "jana1.jpg", "jana10.jpg", "jana2.jpg", "jana3.jpg", "jana4.jpg", "jana5.jpg", "jana6.jpg", "jana7.jpg", "jana8.jpg", "jana9.jpg", "logy1.jpg", "logy10.jpg", "logy11.jpg", "logy2.jpg", "logy3.jpg", "logy4.jpg", "logy5.jpg", "logy6.jpg", "logy7.jpg", "logy8.jpg", "logy9.jpg",  "mohamed1.jpg", "mohamed10.jpg", "mohamed11.jpg", "mohamed2.jpg", "mohamed3.jpg", "mohamed4.jpg", "mohamed5.jpg", "mohamed6.jpg", "mohamed7.jpg", "mohamed8.jpg", "mohamed9.jpg", "raghad1.jpg", "raghad2.jpg", "raghad3.jpg", "hala1.jpg", "hala2.jpg", "rod1.jpg", "rod2.jpg", "rod3.jpg", "rod4.jpg", "rovan1.jpg", "rovan10.jpg", "rovan2.jpg", "rovan3.jpg", "rovan4.jpg", "rovan5.jpg", "rovan6.jpg", "rovan7.jpg", "rovan8.jpg", "rovan9.jpg", "soaad1.jpg", "soaad10.jpg", "soaad2.jpg", "soaad3.jpg", "soaad4.jpg", "soaad5.jpg", "soaad6.jpg", "soaad7.jpg", "soaad8.jpg", "soaad9.jpg", "youssef1.jpg", "youssef2.jpg", "youssef3.jpg", "youssef4.jpg", "youssef5.jpg", "youssef6.jpg", "youssef7.jpg", "youssef8.jpg", "youssef9.jpg",  "zeina1.jpg", "zeina2.jpg", "zeina3.jpg", "zeina4.jpg", "zeina5.jpg", "zeina6.jpg", "alaa/alaa1.jpg", "alaa/alaa2.jpg", "alaa/alaa3.jpg", "alaa/alaa4.jpg", "anas/anas1.jpg", "anas/anas2.jpg", "anas/anas3.jpg", "anas/anas4.jpg",
 ];
 
 function wfFallback(img) {
